@@ -1,6 +1,7 @@
 import * as esbuild from "esbuild-wasm";
 import { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
+import { unpkgPathPlugin } from "./plugins/unpkg-path-plugin";
 
 const App = () => {
   const [input, setInput] = useState("");
@@ -21,12 +22,14 @@ const App = () => {
   const onClick = async () => {
     if (!ref.current) return;
 
-    const res = await ref.current.transform(input, {
-      loader: "jsx",
-      target: "es2015",
+    const result = await ref.current.build({
+      entryPoints: ["index.js"],
+      bundle: true,
+      write: false,
+      plugins: [unpkgPathPlugin()],
     });
 
-    setCode(res.code);
+    setCode(result.code);
   };
 
   return (
