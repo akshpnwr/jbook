@@ -7,11 +7,21 @@ export const unpkgPathPlugin = () => {
     setup(build: esbuild.PluginBuild) {
       build.onResolve({ filter: /.*/ }, async (args: any) => {
         console.log("onResolve", args);
+
         if (args.path === "index.js")
           return {
             path: args.path,
             namespace: "a",
           };
+
+        if (args.path.includes("./") || args.path.includes("../")) {
+          const newPath = new URL(args.path, args.importer + "/").href;
+
+          return {
+            path: newPath,
+            namespace: "a",
+          };
+        }
 
         return { path: `https://unpkg.com/${args.path}`, namespace: "a" };
       });
@@ -23,7 +33,7 @@ export const unpkgPathPlugin = () => {
           return {
             loader: "jsx",
             contents: `
-            var message = require('tiny-test-pkg');
+            var message = require('medium-test-pkg');
             console.log(message);
             `,
           };
