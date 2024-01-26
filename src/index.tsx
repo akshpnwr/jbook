@@ -34,14 +34,26 @@ const App = () => {
       },
     });
 
-    setCode(result.outputFiles[0].text);
+    iframeRef.current.contentWindow.postMessage(
+      result.outputFiles[0].text,
+      "*"
+    );
   };
 
   const html = `
-    <script>
-      ${code}
-    </script>
+    <html>
+      <head></head>
+      <body>
+        <div id="root"></div>
+      </body>
+
+      <script>
+        window.addEventListener('message', (event) => {eval(event.data)}, false);
+      </script>
+    </html>
   `;
+
+  const iframeRef = useRef<any>();
 
   return (
     <div>
@@ -57,7 +69,7 @@ const App = () => {
         Submit
       </button>
       <pre>{code}</pre>
-      <iframe sandbox="allow-scripts" srcDoc={html} />
+      <iframe sandbox="allow-scripts" srcDoc={html} ref={iframeRef} />
     </div>
   );
 };
