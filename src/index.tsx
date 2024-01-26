@@ -6,8 +6,8 @@ import { fetchPlugin } from "./plugins/fetch-plugin";
 
 const App = () => {
   const [input, setInput] = useState("");
-  const [code, setCode] = useState("");
   const ref = useRef<any>();
+  const iframeRef = useRef<any>();
 
   useEffect(() => {
     startService();
@@ -22,6 +22,8 @@ const App = () => {
 
   const onClick = async () => {
     if (!ref.current) return;
+
+    iframeRef.current.srcdoc = html;
 
     const result = await ref.current.build({
       entryPoints: ["index.js"],
@@ -48,12 +50,18 @@ const App = () => {
       </body>
 
       <script>
-        window.addEventListener('message', (event) => {eval(event.data)}, false);
+        window.addEventListener('message', (event) => {
+          try{
+            eval(event.data)
+          }catch(err){
+            const root = document.getElementById('root')
+            root.innerHTML = '<div style="color: red;"><h4>Runtime Error</h4>' + err + '</div>'
+            console.error(err)
+          }
+        }, false);
       </script>
     </html>
   `;
-
-  const iframeRef = useRef<any>();
 
   return (
     <div>
@@ -68,8 +76,15 @@ const App = () => {
       <button type="submit" onClick={onClick}>
         Submit
       </button>
-      <pre>{code}</pre>
-      <iframe sandbox="allow-scripts" srcDoc={html} ref={iframeRef} />
+      <br />
+      <br />
+
+      <iframe
+        sandbox="allow-scripts"
+        srcDoc={html}
+        ref={iframeRef}
+        title="preview"
+      />
     </div>
   );
 };
