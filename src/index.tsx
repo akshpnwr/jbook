@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { unpkgPathPlugin } from "./plugins/unpkg-path-plugin";
 import { fetchPlugin } from "./plugins/fetch-plugin";
+import CodeEditor from "./components/code-editor";
 
 const App = () => {
   const [input, setInput] = useState("");
@@ -20,7 +21,7 @@ const App = () => {
     });
   };
 
-  const onClick = async () => {
+  const onClick = async (input: string) => {
     if (!ref.current) return;
 
     iframeRef.current.srcdoc = html;
@@ -40,6 +41,8 @@ const App = () => {
       result.outputFiles[0].text,
       "*"
     );
+
+    console.log("after result");
   };
 
   const html = `
@@ -65,17 +68,15 @@ const App = () => {
 
   return (
     <div>
+      <CodeEditor />
       <textarea
-        name=""
-        id=""
-        cols={30}
-        rows={10}
+        value={input}
         onChange={(e) => setInput(e.target.value)}
       ></textarea>
       <br />
-      <button type="submit" onClick={onClick}>
+      {/* <button type="submit" onClick={onClick}>
         Submit
-      </button>
+      </button> */}
       <br />
       <br />
 
