@@ -21,7 +21,7 @@ const App = () => {
     });
   };
 
-  const onClick = async (input: string) => {
+  const onClick = async () => {
     if (!ref.current) return;
 
     iframeRef.current.srcdoc = html;
@@ -41,8 +41,6 @@ const App = () => {
       result.outputFiles[0].text,
       "*"
     );
-
-    console.log("after result");
   };
 
   const html = `
@@ -68,15 +66,18 @@ const App = () => {
 
   return (
     <div>
-      <CodeEditor />
+      <CodeEditor
+        initialValue="console.log('Hello')"
+        onChange={(value) => setInput(value)}
+      />
       <textarea
         value={input}
         onChange={(e) => setInput(e.target.value)}
       ></textarea>
       <br />
-      {/* <button type="submit" onClick={onClick}>
+      <button type="submit" onClick={onClick}>
         Submit
-      </button> */}
+      </button>
       <br />
       <br />
 
