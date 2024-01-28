@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import bundle from "../bundler";
 import CodeEditor from "./code-editor";
 import Preview from "./preview";
+import Resizable from "./resizable";
 
 const CodeCell: React.FC = () => {
   const [input, setInput] = useState("");
@@ -13,18 +14,20 @@ const CodeCell: React.FC = () => {
   };
 
   return (
-    <div>
-      <CodeEditor
-        initialValue="console.log('Hello')"
-        onChange={(value) => setInput(value)}
-      />
-      <div>
-        <button type="submit" onClick={onClick}>
-          Submit
-        </button>
+    <Resizable direction="vertical">
+      <div style={{ height: "100%", display: "flex", flexDirection: "row" }}>
+        <CodeEditor
+          initialValue="console.log('Hello')"
+          onChange={(value) => setInput(value)}
+        />
+        {/* <div>
+          <button type="submit" onClick={onClick}>
+            Submit
+          </button>
+        </div> */}
+        <Preview code={code} />
       </div>
-      <Preview code={code} />
-    </div>
+    </Resizable>
   );
 };
 
