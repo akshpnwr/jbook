@@ -16,10 +16,12 @@ const CodeCell: React.FC = () => {
   return (
     <Resizable direction="vertical">
       <div style={{ height: "100%", display: "flex", flexDirection: "row" }}>
-        <CodeEditor
-          initialValue="console.log('Hello')"
-          onChange={(value) => setInput(value)}
-        />
+        <Resizable direction="horizontal">
+          <CodeEditor
+            initialValue="console.log('Hello')"
+            onChange={(value) => setInput(value)}
+          />
+        </Resizable>
         {/* <div>
           <button type="submit" onClick={onClick}>
             Submit
