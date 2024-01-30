@@ -6,12 +6,14 @@ import { store } from './state'
 
 const App = () => {
   return (
-    <Provider store={store}>
-      <div>
-        <TextEditor />
-      </div>
-    </Provider>
+    <div>
+      <TextEditor />
+    </div>
   )
 }
 
-createRoot(document.getElementById('root') as HTMLElement).render(<App />)
+createRoot(document.getElementById('root') as HTMLElement).render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+)

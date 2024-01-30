@@ -1,35 +1,30 @@
-import { Dispatch } from 'redux'
 import {
-  Action,
   DeleteCellAction,
   UpdateCellAction,
   MoveCellAction,
   InsertCellBeforeAction,
+  Direction,
 } from '../actions'
 import { ActionType } from '../action-types'
 import { CellTypes } from '../cell'
 
-export const updateCell = (id: string, contents: string): UpdateCellAction => {
+export const updateCell = (id: string, content: string): UpdateCellAction => {
   return {
     type: ActionType.UPDATE_CELL,
     payload: {
       id,
-      contents,
+      content,
     },
   }
 }
+
 export const deleteCell = (id: string): DeleteCellAction => {
   return {
     type: ActionType.DELETE_CELL,
-    payload: {
-      id,
-    },
+    payload: id,
   }
 }
-export const moveCell = (
-  id: string,
-  direction: 'up' | 'down'
-): MoveCellAction => {
+export const moveCell = (id: string, direction: Direction): MoveCellAction => {
   return {
     type: ActionType.MOVE_CELL,
     payload: {
@@ -40,13 +35,13 @@ export const moveCell = (
 }
 export const insertCellBefore = (
   id: string,
-  type: CellTypes
+  cellType: CellTypes
 ): InsertCellBeforeAction => {
   return {
     type: ActionType.INSERT_CELL_BEFORE,
     payload: {
       id,
-      type,
+      type: cellType,
     },
   }
 }

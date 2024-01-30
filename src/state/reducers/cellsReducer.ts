@@ -1,6 +1,7 @@
 import { ActionType } from '../action-types'
 import { Action } from '../actions'
 import { Cell } from '../cell'
+import { produce } from 'immer'
 
 interface CellsState {
   data: { [key: string]: Cell }
@@ -18,22 +19,25 @@ const initialState: CellsState = {
 }
 
 // Reducer function
-const reducer = (
-  state: CellsState = initialState,
-  action: Action
-): CellsState => {
+const reducer = produce((state: CellsState = initialState, action: Action) => {
   switch (action.type) {
     case ActionType.DELETE_CELL:
-      return state
+      delete state.data[action.payload]
+      state.order = state.order.filter((id) => id !== action.payload)
+
+      return
     case ActionType.MOVE_CELL:
       return state
     case ActionType.UPDATE_CELL:
-      return state
+      const { id, content } = action.payload
+      state.data[id].content = content
+
+      return
     case ActionType.INSERT_CELL_BEFORE:
       return state
     default:
       return state
   }
-}
+})
 
 export default reducer
