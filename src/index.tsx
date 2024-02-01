@@ -1,13 +1,13 @@
 import 'bulmaswatch/superhero/bulmaswatch.min.css'
 import { createRoot } from 'react-dom/client'
-import TextEditor from './components/text-editor'
 import { Provider } from 'react-redux'
 import { store } from './state'
+import CellList from './components/cell-list'
 
 const App = () => {
   return (
     <div>
-      <TextEditor />
+      <CellList />
     </div>
   )
 }
