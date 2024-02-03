@@ -6,11 +6,11 @@ interface CellListItemProps {
   cell: Cell
 }
 
-const CellListItem: React.FC<CellListItemProps> = ({ cell: { type } }) => {
+const CellListItem: React.FC<CellListItemProps> = ({ cell }) => {
   return (
     <div>
-      {type === 'code' && <CodeCell />}
-      {type === 'text' && <TextEditor />}
+      {cell.type === 'code' && <CodeCell cell={cell} />}
+      {cell.type === 'text' && <TextEditor cell={cell} />}
     </div>
   )
 }

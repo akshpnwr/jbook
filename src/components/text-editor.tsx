@@ -1,11 +1,17 @@
-import "./text-editor.css";
-import MDEditor from "@uiw/react-md-editor";
-import React, { useEffect, useRef, useState } from "react";
+import './text-editor.css'
+import MDEditor from '@uiw/react-md-editor'
+import React, { useEffect, useRef, useState } from 'react'
+import { useAction } from '../hooks/use-actions'
+import { Cell } from '../state'
 
-const TextEditor: React.FC = () => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [value, setValue] = useState("# Header");
-  const ref = useRef<HTMLDivElement | null>(null);
+interface TextEditorProps {
+  cell: Cell
+}
+
+const TextEditor: React.FC<TextEditorProps> = ({ cell }) => {
+  const [isEditing, setIsEditing] = useState(false)
+  const ref = useRef<HTMLDivElement | null>(null)
+  const { updateCell } = useAction()
 
   useEffect(() => {
     const listener = (event: MouseEvent) => {
@@ -14,33 +20,36 @@ const TextEditor: React.FC = () => {
         event.target &&
         ref.current.contains(event.target as Node)
       )
-        return;
+        return
 
-      setIsEditing(false);
-    };
+      setIsEditing(false)
+    }
 
-    document.addEventListener("click", listener, { capture: true });
+    document.addEventListener('click', listener, { capture: true })
 
     return () => {
-      document.addEventListener("click", listener, { capture: true });
-    };
-  }, []);
+      document.addEventListener('click', listener, { capture: true })
+    }
+  }, [])
 
   if (isEditing) {
     return (
       <div className="text-editor" ref={ref}>
-        <MDEditor value={value} onChange={(v) => setValue(v || "")} />
+        <MDEditor
+          value={cell.content}
+          onChange={(v) => updateCell(cell.id, v || '')}
+        />
       </div>
-    );
+    )
   }
 
   return (
     <div className="text-editor card" onClick={() => setIsEditing(true)}>
       <div className="card-content">
-        <MDEditor.Markdown source={value} />
+        <MDEditor.Markdown source={cell.content || 'Click to edit'} />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default TextEditor;
+export default TextEditor
