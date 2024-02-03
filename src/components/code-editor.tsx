@@ -1,43 +1,43 @@
-import "./code-editor.css";
-import MonacoEditor, { EditorDidMount } from "@monaco-editor/react";
-import React, { useRef } from "react";
-import prettier from "prettier";
-import parser from "prettier/parser-babel";
+import './code-editor.css'
+import MonacoEditor, { EditorDidMount } from '@monaco-editor/react'
+import React, { useRef } from 'react'
+import prettier from 'prettier'
+import parser from 'prettier/parser-babel'
 
 interface CodeEditorProps {
-  initialValue: string;
-  onChange(value: string): void;
+  initialValue: string
+  onChange(value: string): void
 }
 
 const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
-  const editorRef = useRef<any>();
+  const editorRef = useRef<any>()
 
   const onEditorDidMount: EditorDidMount = (getValue, monacoEditor) => {
-    editorRef.current = monacoEditor;
+    editorRef.current = monacoEditor
     monacoEditor.onDidChangeModelContent(() => {
-      onChange(getValue());
-    });
-    monacoEditor.getModel()?.updateOptions({ tabSize: 2 });
-  };
+      onChange(getValue())
+    })
+    monacoEditor.getModel()?.updateOptions({ tabSize: 2 })
+  }
 
   const onFormatClick = () => {
     // get unformatted code
-    const unformattedCode = editorRef.current.getModel().getValue();
+    const unformattedCode = editorRef.current.getModel().getValue()
 
     // format code
     const formattedCode = prettier
       .format(unformattedCode, {
-        parser: "babel",
+        parser: 'babel',
         plugins: [parser],
         useTabs: false,
         semi: true,
         singleQuote: true,
       })
-      .replace(/\n$/, "");
+      .replace(/\n$/, '')
 
     // put formatted code in editor
-    editorRef.current.setValue(formattedCode);
-  };
+    editorRef.current.setValue(formattedCode)
+  }
 
   return (
     <div className="editor-wrapper">
@@ -54,7 +54,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
         theme="dark"
         language="javascript"
         options={{
-          wordWrap: "on",
+          wordWrap: 'on',
           minimap: { enabled: false },
           showUnused: false,
           folding: false,
@@ -65,7 +65,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
         }}
       />
     </div>
-  );
-};
+  )
+}
 
-export default CodeEditor;
+export default CodeEditor
