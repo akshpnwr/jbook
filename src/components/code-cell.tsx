@@ -6,6 +6,7 @@ import Resizable from './resizable'
 import { useAction } from '../hooks/use-actions'
 import { Cell } from '../state'
 import { useTypedSelector } from '../hooks/use-typed-selector'
+import { useCumulativeCode } from '../hooks/use-cumulative-code'
 
 interface CodeCellProps {
   cell: Cell
@@ -16,55 +17,17 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
   const bundle = useTypedSelector((state) => state.bundles[cell.id])
 
   // Collect content of cells before current cell
-  const cumulativeCode = useTypedSelector((state) => {
-    const data = state.cells.data
-    const order = state.cells.order
-
-    const orderedCells = order.map((id) => data[id])
-
-    const cumulativeCode = [
-      `
-      import _React from 'react'
-      import _ReactDom from 'react-dom'
-
-      function show(value) {
-        const root = document.querySelector('#root');
-
-        if(typeof value === 'object') {          
-          if(value.$$typeof && value.props)
-          {
-            _ReactDom.render(value, root)
-          }
-          else{
-            root.innerHTML = JSON.stringify(value);
-          }
-        }
-        else {
-          root.innerHTML = value
-        }
-      }
-    `,
-    ]
-
-    for (let c of orderedCells) {
-      if (c.type === 'code') {
-        cumulativeCode.push(c.content)
-      }
-      if (c.id === cell.id) break
-    }
-
-    return cumulativeCode
-  })
+  const cumulativeCode = useCumulativeCode(cell.id)
 
   useEffect(() => {
     if (!bundle) {
-      createBundle(cell.id, cumulativeCode.join('\n'))
+      createBundle(cell.id, cumulativeCode)
       return
     }
 
     const timer = setTimeout(async () => {
       try {
-        createBundle(cell.id, cumulativeCode.join('\n'))
+        createBundle(cell.id, cumulativeCode)
       } catch (error) {
         console.error(error)
       }
@@ -73,7 +36,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
     return () => {
       clearTimeout(timer)
     }
-  }, [cumulativeCode.join('\n'), cell.id])
+  }, [cumulativeCode, cell.id])
 
   return (
     <Resizable direction="vertical">
