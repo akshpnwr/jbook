@@ -3,6 +3,10 @@ export enum ActionType {
   DELETE_CELL = 'delete_cell',
   INSERT_CELL_AFTER = 'insert_cell_after',
   MOVE_CELL = 'move_cell',
+  FETCH_CELLS = 'fetch_cells',
+  FETCH_CELLS_COMPLETE = 'fetch_cells_complete',
+  FETCH_CELLS_ERROR = 'fetch_cells_error',
   BUNDLE_START = 'bundle_start',
   BUNDLE_COMPLETE = 'bundle_complete',
+  SAVE_CELLS_ERROR = 'save_cells_error',
 }
